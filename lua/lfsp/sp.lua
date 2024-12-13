@@ -1,16 +1,27 @@
 sp = {}
 
-sp.fun = function(direction)
+sp.map_expr = function(direction, follow)
+	vim.o.operatorfunc = "v:lua.sp.callback"
 	sp.direction = direction
-	vim.go.operatorfunc = "v:lua.sp.fun_callback"
+	sp.follow = follow
 	return "g@l"
 end
 
-sp.fun_callback = function()
-	vim.api.nvim_put({string.rep(" ", vim.v.count1)}, "c", sp.direction, true)
-	if sp.direction then
-		vim.api.nvim_feedkeys("h", "n", false)
-	else
-		vim.api.nvim_feedkeys(vim.v.count1 .. "h", "n", false)
+sp.callback = function()
+	for i = 1, vim.v.count1 do
+		local l, c = unpack(vim.api.nvim_win_get_cursor(0))
+		if sp.direction then
+			vim.api.nvim_buf_set_text(0, l-1, c+1, l-1, c+1, {" "})
+		else
+			vim.api.nvim_buf_set_text(0, l-1, c,   l-1, c,   {" "})
+		end
+
+		if sp.follow then
+			if sp.direction then
+				vim.api.nvim_feedkeys("l", "n", false)
+			else
+				vim.api.nvim_feedkeys("h", "n", false)
+			end
+		end
 	end
 end

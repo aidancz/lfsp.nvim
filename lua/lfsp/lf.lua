@@ -1,17 +1,27 @@
 lf = {}
 
-lf.fun = function(direction)
+lf.map_expr = function(direction, follow)
+	vim.o.operatorfunc = "v:lua.lf.callback"
 	lf.direction = direction
-	vim.go.operatorfunc = "v:lua.lf.fun_callback"
+	lf.follow = follow
 	return "g@l"
 end
 
-lf.fun_callback = function()
-	local lnum_current = vim.fn.line(".")
-	vim.fn.append((lf.direction and lnum_current or lnum_current - 1), vim.fn["repeat"]({""}, vim.v.count1))
-	if lf.direction then
-		vim.api.nvim_feedkeys(vim.v.count1 .. "j", "n", false)
-	else
-		vim.api.nvim_feedkeys(vim.v.count1 .. "k", "n", false)
+lf.callback = function()
+	for i = 1, vim.v.count1 do
+		local l, c = unpack(vim.api.nvim_win_get_cursor(0))
+		if lf.direction then
+			vim.api.nvim_buf_set_lines(0, l,   l,   true, {""})
+		else
+			vim.api.nvim_buf_set_lines(0, l-1, l-1, true, {""})
+		end
+
+		if lf.follow then
+			if lf.direction then
+				vim.api.nvim_feedkeys("j", "n", false)
+			else
+				vim.api.nvim_feedkeys("k", "n", false)
+			end
+		end
 	end
 end
