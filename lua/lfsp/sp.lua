@@ -11,7 +11,15 @@ sp.callback = function()
 	for i = 1, vim.v.count1 do
 		local l, c = unpack(vim.api.nvim_win_get_cursor(0))
 		if sp.direction then
-			vim.api.nvim_buf_set_text(0, l-1, c+1, l-1, c+1, {" "})
+			-- vim.api.nvim_buf_set_text(0, l-1, c+1, l-1, c+1, {" "})
+			vim.api.nvim_buf_set_text(
+				0,
+				l-1,
+				c+1+vim.str_utf_end(vim.fn.getline("."), c+1),
+				l-1,
+				c+1+vim.str_utf_end(vim.fn.getline("."), c+1),
+				{" "}
+			)
 		else
 			vim.api.nvim_buf_set_text(0, l-1, c,   l-1, c,   {" "})
 		end
