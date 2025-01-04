@@ -18,9 +18,11 @@ lf.callback = function()
 
 		if lf.follow then
 			if lf.direction then
-				vim.api.nvim_feedkeys("j", "n", false)
+				-- vim.api.nvim_feedkeys("j", "n", false)
+				vim.api.nvim_win_set_cursor(0, {l+1, 0})
 			else
-				vim.api.nvim_feedkeys("k", "n", false)
+				-- vim.api.nvim_feedkeys("k", "n", false)
+				vim.api.nvim_win_set_cursor(0, {l, 0})
 			end
 		end
 	end

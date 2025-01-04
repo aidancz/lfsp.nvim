@@ -26,9 +26,11 @@ sp.callback = function()
 
 		if sp.follow then
 			if sp.direction then
-				vim.api.nvim_feedkeys("l", "n", false)
+				-- vim.api.nvim_feedkeys("l", "n", false)
+				vim.api.nvim_win_set_cursor(0, {l, c+1+vim.str_utf_end(vim.fn.getline("."), c+1)})
 			else
-				vim.api.nvim_feedkeys("h", "n", false)
+				-- vim.api.nvim_feedkeys("h", "n", false)
+				vim.api.nvim_win_set_cursor(0, {l, c})
 			end
 		end
 	end
