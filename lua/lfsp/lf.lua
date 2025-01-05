@@ -9,21 +9,18 @@ end
 
 lf.callback = function()
 	for i = 1, vim.v.count1 do
+
 		local l, c = unpack(vim.api.nvim_win_get_cursor(0))
+
 		if lf.direction then
-			vim.api.nvim_buf_set_lines(0, l,   l,   true, {""})
+			vim.api.nvim_buf_set_lines(0, l-1+1, l-1+1, true, {""})
+			if not lf.follow then return end
+			vim.api.nvim_win_set_cursor(0, {l+1, 0})
 		else
 			vim.api.nvim_buf_set_lines(0, l-1, l-1, true, {""})
+			if not lf.follow then return end
+			vim.api.nvim_win_set_cursor(0, {l, 0})
 		end
 
-		if lf.follow then
-			if lf.direction then
-				-- vim.api.nvim_feedkeys("j", "n", false)
-				vim.api.nvim_win_set_cursor(0, {l+1, 0})
-			else
-				-- vim.api.nvim_feedkeys("k", "n", false)
-				vim.api.nvim_win_set_cursor(0, {l, 0})
-			end
-		end
 	end
 end

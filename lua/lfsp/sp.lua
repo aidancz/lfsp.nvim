@@ -9,9 +9,14 @@ end
 
 sp.callback = function()
 	for i = 1, vim.v.count1 do
+
 		local l, c = unpack(vim.api.nvim_win_get_cursor(0))
-		if sp.direction then
-			-- vim.api.nvim_buf_set_text(0, l-1, c+1, l-1, c+1, {" "})
+
+		if sp.direction and c == vim.fn.col("$")-1 then
+			vim.api.nvim_buf_set_text(0, l-1+1, 0, l-1+1, 0, {" "})
+			if not sp.follow then return end
+			vim.api.nvim_win_set_cursor(0, {l+1, 0})
+		elseif sp.direction then
 			vim.api.nvim_buf_set_text(
 				0,
 				l-1,
@@ -20,18 +25,13 @@ sp.callback = function()
 				c+1+vim.str_utf_end(vim.fn.getline("."), c+1),
 				{" "}
 			)
-		else
-			vim.api.nvim_buf_set_text(0, l-1, c,   l-1, c,   {" "})
+			if not sp.follow then return end
+			vim.api.nvim_win_set_cursor(0, {l, c+1+vim.str_utf_end(vim.fn.getline("."), c+1)})
+		elseif not sp.direction then
+			vim.api.nvim_buf_set_text(0, l-1, c, l-1, c, {" "})
+			if not sp.follow then return end
+			vim.api.nvim_win_set_cursor(0, {l, c})
 		end
 
-		if sp.follow then
-			if sp.direction then
-				-- vim.api.nvim_feedkeys("l", "n", false)
-				vim.api.nvim_win_set_cursor(0, {l, c+1+vim.str_utf_end(vim.fn.getline("."), c+1)})
-			else
-				-- vim.api.nvim_feedkeys("h", "n", false)
-				vim.api.nvim_win_set_cursor(0, {l, c})
-			end
-		end
 	end
 end
