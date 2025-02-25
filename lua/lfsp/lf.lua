@@ -15,11 +15,15 @@ lf.callback = function()
 		if lf.direction then
 			vim.api.nvim_buf_set_lines(0, l-1+1, l-1+1, true, {""})
 			if not lf.follow then return end
-			vim.api.nvim_win_set_cursor(0, {l+1, 0})
+			-- vim.api.nvim_win_set_cursor(0, {l+1, 0})
+			vim.cmd("normal! gj")
+			vim.cmd("normal! zv")
 		else
 			vim.api.nvim_buf_set_lines(0, l-1, l-1, true, {""})
 			if not lf.follow then return end
-			vim.api.nvim_win_set_cursor(0, {l, 0})
+			-- vim.api.nvim_win_set_cursor(0, {l, 0})
+			vim.cmd("normal! gk")
+			vim.cmd("normal! zv")
 		end
 
 	end
