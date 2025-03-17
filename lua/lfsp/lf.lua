@@ -16,14 +16,14 @@ lf.callback = function()
 			vim.api.nvim_buf_set_lines(0, l-1+1, l-1+1, true, {""})
 			if not lf.follow then return end
 			-- vim.api.nvim_win_set_cursor(0, {l+1, 0})
-			local H = require("lfsp/H")
+			local H = require("lfsp/virtcol")
 			H.set_cursor(l+1, H.virtcol_remainder(H.virtcol_cursor()))
 			vim.cmd("normal! zv")
 		else
 			vim.api.nvim_buf_set_lines(0, l-1, l-1, true, {""})
 			if not lf.follow then return end
 			-- vim.api.nvim_win_set_cursor(0, {l, 0})
-			local H = require("lfsp/H")
+			local H = require("lfsp/virtcol")
 			H.set_cursor(l, H.virtcol_remainder(H.virtcol_cursor()))
 			vim.cmd("normal! zv")
 		end
