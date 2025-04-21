@@ -8,76 +8,9 @@ lfsp.nvim - insert newline/space without entering insert mode
 
 # setup
 
-## setup example 1:
-
-```
-require("lfsp").setup()
-```
-
-this uses default settings, which is equivalent to:
-
-```
-require("lfsp").setup({
-	{
-		type = "lf",
-		follow = true,
-		backward = "<up>",
-		forward = "<down>",
-	},
-	{
-		type = "sp",
-		follow = true,
-		backward = "<left>",
-		forward = "<right>",
-	},
-})
-```
-
-## setup example 2:
-
-if you want `lf` only:
-
-```
-require("lfsp").setup({
-	{
-		type = "lf",
-		follow = true,
-		backward = "<up>",
-		forward = "<down>",
-	},
-})
-```
-
-## setup example 3:
-
-if you want to test the difference between `follow = true` and `follow = false`, you may:
-
-```
-require("lfsp").setup({
-	{
-		type = "lf",
-		follow = true,
-		backward = "<up>",
-		forward = "<down>",
-	},
-	{
-		type = "lf",
-		follow = false,
-		backward = "<leader>k",
-		forward = "<leader>j",
-	},
-})
-```
-
-## setup example 4:
-
-if you are using `lazy.nvim`:
-
-```
-{
-	"aidancz/lfsp.nvim",
-	config = function()
-		require("lfsp").setup()
-	end,
-}
+```lua
+vim.keymap.set({"n", "x", "o"}, "<down>",  function() return require("lf").expr("next", true) end, {expr = true})
+vim.keymap.set({"n", "x", "o"}, "<up>",    function() return require("lf").expr("prev", true) end, {expr = true})
+vim.keymap.set({"n", "x", "o"}, "<left>",  function() return require("sp").expr("prev", true) end, {expr = true})
+vim.keymap.set({"n", "x", "o"}, "<right>", function() return require("sp").expr("next", true) end, {expr = true})
 ```
