@@ -47,8 +47,8 @@ end
 
 -- the following is for expr mapping
 
-M.expr = function(direction, follow)
-	M.update_cache(direction, follow)
+M.expr = function(opts)
+	M.update_cache(opts.direction, opts.follow)
 	vim.o.operatorfunc = [[v:lua.require'lf'.apply_cache]]
 	return "g@l"
 end
