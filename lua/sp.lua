@@ -1,6 +1,9 @@
 local M = {}
 
-M.add_sp = function(direction, count, follow)
+---@param count number
+---@param direction "prev"|"next"
+---@param follow boolean
+M.add_sp = function(count, direction, follow)
 	for _ = 1, count do
 		local row1 = vim.api.nvim_win_get_cursor(0)[1]
 		local row0 = row1 - 1
@@ -35,37 +38,33 @@ M.add_sp = function(direction, count, follow)
 	end
 end
 
+M.add_sp_opts = function(opts)
+	M.add_sp(opts.count, opts.direction, opts.follow)
+end
+
 -- the following is for dot-repeat
 
 M.cache = {
-	direction = nil,
 	count = nil,
+	direction = nil,
 	follow = nil,
 }
 
-M.update_cache = function(direction, follow)
-	M.cache.direction = direction
-	M.cache.count = vim.v.count1
-	M.cache.follow = follow
-end
-
 M.apply_cache = function()
-	M.add_sp(
-		M.cache.direction,
-		vim.v.count == 0 and M.cache.count or vim.v.count,
-		M.cache.follow
-	)
+	if vim.v.count ~= 0 then
+		M.cache.count = vim.v.count
+	end
+	M.add_sp_opts(M.cache)
 end
 
-M.new = function(direction, follow)
-	M.update_cache(direction, follow)
-	M.apply_cache()
-end
-
--- the following is for expr mapping
-
+---@param opts {
+---	direction: "prev"|"next",
+---	follow: boolean,
+---}
 M.expr = function(opts)
-	M.update_cache(opts.direction, opts.follow)
+	opts.count = vim.v.count1
+
+	M.cache = opts
 	vim.o.operatorfunc = [[v:lua.require'sp'.apply_cache]]
 	return "g@l"
 end
