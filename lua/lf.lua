@@ -21,34 +21,31 @@ M.add_lf = function(count, direction, follow)
 	end
 end
 
+-- # the following is for dot-repeat
+
 M.add_lf_opts = function(opts)
 	M.add_lf(opts.count, opts.direction, opts.follow)
 end
 
--- the following is for dot-repeat
+M.cache_opts = nil
 
-M.cache = {
-	count = nil,
-	direction = nil,
-	follow = nil,
-}
-
-M.apply_cache = function()
+M.apply_cache_opts = function()
 	if vim.v.count ~= 0 then
-		M.cache.count = vim.v.count
+		M.cache_opts.count = vim.v.count
 	end
-	M.add_lf_opts(M.cache)
+	M.add_lf_opts(M.cache_opts)
 end
 
 ---@param opts {
+---	count?: number,
 ---	direction: "prev"|"next",
 ---	follow: boolean,
 ---}
 M.expr = function(opts)
-	opts.count = vim.v.count1
+	opts.count = opts.count or vim.v.count1
 
-	M.cache = opts
-	vim.o.operatorfunc = [[v:lua.require'lf'.apply_cache]]
+	M.cache_opts = opts
+	vim.o.operatorfunc = [[v:lua.require'lf'.apply_cache_opts]]
 	return "g@l"
 end
 
