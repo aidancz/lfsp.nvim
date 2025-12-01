@@ -40,29 +40,40 @@ end
 
 -- # the following is for dot-repeat
 
-M.add_sp_opts = function(opts)
-	M.add_sp(opts.count, opts.direction, opts.follow)
-end
+M.cache = {
+	count = 1,
+	direction = "next",
+	follow = true,
+}
 
-M.cache_opts = nil
-
-M.apply_cache_opts = function()
+M.cache_apply = function()
 	if vim.v.count ~= 0 then
-		M.cache_opts.count = vim.v.count
+		M.cache.count = vim.v.count
 	end
-	M.add_sp_opts(M.cache_opts)
+
+	M.add_sp(
+		M.cache.count,
+		M.cache.direction,
+		M.cache.follow
+	)
 end
 
----@param opts {
+---@param opts? {
 ---	count?: number,
----	direction: "prev"|"next",
----	follow: boolean,
+---	direction:? "prev"|"next",
+---	follow:? boolean,
 ---}
 M.expr = function(opts)
-	opts.count = opts.count or vim.v.count1
-
-	M.cache_opts = opts
-	vim.o.operatorfunc = [[v:lua.require'sp'.apply_cache_opts]]
+	M.cache = vim.tbl_extend(
+		"force",
+		{
+			count = 1,
+			direction = "next",
+			follow = true,
+		},
+		opts or {}
+	)
+	vim.o.operatorfunc = [[v:lua.require'sp'.cache_apply]]
 	return "g@l"
 end
 
